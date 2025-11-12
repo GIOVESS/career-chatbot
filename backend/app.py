@@ -2,19 +2,20 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from transformers import AutoModelForCausalLM, AutoTokenizer
+from transformers import AutoModelForSeq2SeqLM, AutoTokenizer
 import torch
 import os
 
-MODEL_NAME = "microsoft/phi-2"     # we'll swap to "mistralai/Mistral-7B-Instruct" if GPU available
+# Lightweight model suitable for CPU
+MODEL_NAME = "google/flan-t5-small"  # or "TinyLlama/TinyLlama-1.1B-Chat-v1.0"
 
-print("Loading model... this may take a minute ")
+print("Loading lightweight model...")
 
 tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
-model = AutoModelForCausalLM.from_pretrained(
+model = AutoModelForSeq2SeqLM.from_pretrained(
     MODEL_NAME,
-    torch_dtype=torch.float16 if torch.cuda.is_available() else torch.float32,
-    device_map="auto"
+    torch_dtype=torch.float32,
+    low_cpu_mem_usage=True
 )
 
 app = FastAPI()
@@ -35,8 +36,8 @@ class Message(BaseModel):
 
 @app.post("/api/chat")
 async def chat(msg: Message):
-    inputs = tokenizer(msg.message, return_tensors="pt").to(model.device)
-    outputs = model.generate(**inputs, max_new_tokens=150)
+    inputs = tokenizer(msg.message, return_tensors="pt")
+    outputs = model.generate(**inputs, max_new_tokens=100)
     response = tokenizer.decode(outputs[0], skip_special_tokens=True)
     return {"response": response}
 
