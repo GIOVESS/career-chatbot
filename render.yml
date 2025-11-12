@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: career-chatbot
+    env: docker
+    plan: starter
+    autoDeploy: true
+    envVars:
+      - key: PORT
+        value: 8000
