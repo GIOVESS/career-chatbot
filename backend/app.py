@@ -7,14 +7,14 @@ import torch
 import os
 
 # Lightweight model suitable for CPU
-MODEL_NAME = "google/flan-t5-small"  # or "TinyLlama/TinyLlama-1.1B-Chat-v1.0"
+MODEL_NAME = "google/flan-t5-small"  # Smallest relevant model for memory efficiency
 
 print("Loading lightweight model...")
 
 tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
 model = AutoModelForSeq2SeqLM.from_pretrained(
     MODEL_NAME,
-    torch_dtype=torch.float32,
+    dtype=torch.float32,         
     low_cpu_mem_usage=True
 )
 
