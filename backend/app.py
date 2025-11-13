@@ -6,15 +6,14 @@ from transformers import AutoModelForSeq2SeqLM, AutoTokenizer
 import torch
 import os
 
-# Lightweight model suitable for CPU
-MODEL_NAME = "google/flan-t5-small"  # Smallest relevant model for memory efficiency
+MODEL_NAME = "google/flan-t5-mini"  # Tiniest relevant model ~30M parameters
 
 print("Loading lightweight model...")
 
 tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
 model = AutoModelForSeq2SeqLM.from_pretrained(
     MODEL_NAME,
-    dtype=torch.float32,         
+    dtype=torch.float32,
     low_cpu_mem_usage=True
 )
 
