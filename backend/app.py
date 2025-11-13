@@ -6,7 +6,7 @@ from transformers import AutoModelForSeq2SeqLM, AutoTokenizer
 import torch
 import os
 
-MODEL_NAME = "google/flan-t5-mini"  # Tiniest relevant model ~30M parameters
+MODEL_NAME = "google/flan-t5-small"  # ~80M parameters, instruction-tuned, CPU-friendly
 
 print("Loading lightweight model...")
 
